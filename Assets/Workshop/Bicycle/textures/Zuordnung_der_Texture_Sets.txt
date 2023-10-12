@@ -1,0 +1,67 @@
+Es sind 5 Ordner hier auf diesem Pfad.
+Jeder Dieser Ordner enthält ein Texture Set die mehreren Meshes zugeordnet sind.
+
+
+
+
+-Leitung_Zahnräder_Schaltwerk_Kette
+
+gehört zun den Meshes:
+	-Leitung_Bremse_vorne
+	-Leitung_Bremse_hinten
+	-Leitung_Gangschaltung
+
+	-Kette
+	-Zahnkranz
+	-Schaltwerk
+	-Kasette
+_________________________________________
+
+-Lenkrad
+
+gehört zu den Meshes:
+	-Lenkgradstange
+	-Lenkgrad_halterung
+	-Gabel
+	-Bremshebel_rechts
+	-Bremshebel_links
+	-Gangschalter
+
+_________________________________________
+
+-Rahmen_Sattelstange
+
+gehört zu den Meshes:
+	-Rahmen
+	-Sattelstange
+
+_________________________________________
+
+-Reifen
+
+gehört zu den Meshes:
+	-Reifen_hinten
+	-Reifen_vorne
+	-Speichen_hinten
+	-Speichen_vorne
+	-Achse_hinten
+	-Achse_vorne
+
+_________________________________________
+
+-Sattel_Bremse_Pedale
+
+gehört zu den Meshes:
+	-Sattel
+	-Sattel_verstellteil
+	-Sattelspanner
+	-Kurbelarm
+	-Pedale
+	-Scheibenbremse_hinten
+	-Scheibenbremse_vorne
+	-Bremse_hinten
+	-Bremse_vorne
+	-Spannachse_hinten
+	-Spannachse_vorne
+
+_________________________________________
