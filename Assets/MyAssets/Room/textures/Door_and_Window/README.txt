@@ -1,0 +1,2 @@
+Texture for the Windowframe exists of 2 different PBR textures.
+When you use the Walls_window asset you will see that the window frame has 2 Elements in the Materials Menu. There you need to drop the 2 Materials. Element 0 should be the DoorandWindow Material and Element 1 should be the Glass Material
