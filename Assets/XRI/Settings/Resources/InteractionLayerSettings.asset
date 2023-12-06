@@ -14,31 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LayerNames:
   - Default
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Sattel
+  - Sattel_verstellteil
+  - Sattelspanner
+  - Zahnkranz
+  - Reifen
+  - Speichen
+  - Spannachsen
+  - Scheibenbremsen
+  - Schaltwerk
+  - Sattelstange
+  - Rahmen
+  - Pedale
+  - Lenkradstange
+  - Lenkrad_halterung
+  - Leitung_Bremse_hinten
+  - Leitung_Gangschaltung
+  - Leitung_Bremse_vorne
+  - Kurbelarm
+  - Kette
+  - Kasette
+  - Gangschalter
+  - Gabel
+  - Bremshebel
+  - Bremsen
+  - Achsen
   - 
   - 
   - 
