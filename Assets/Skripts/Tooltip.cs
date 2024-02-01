@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+public enum Difficulty { NoHelp, SmallHelp, BigHelp };
 [ExecuteInEditMode]
 [RequireComponent(typeof(LineRenderer))]
 public class Tooltip : MonoBehaviour
 {
+    
     public Transform start;
     public Transform end;
+    public Difficulty thisDifficulty;
+    public SceneController sceneController;
 
     [Tooltip("Draw the line with an offset to this GameObject's origin")]
     public Vector3 offset = new Vector3(0, -0.05f, 0);
@@ -36,5 +39,13 @@ public class Tooltip : MonoBehaviour
         this.transform.LookAt(Camera.main.transform);
         
         this.transform.Rotate(Vector3.up, 180);
+    }
+
+    public void ToggleState(bool value)
+    {
+        if(thisDifficulty == sceneController.GetDifficulty())
+        {
+            this.gameObject.SetActive(value);
+        }
     }
 }
