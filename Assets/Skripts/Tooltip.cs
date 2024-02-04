@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum Difficulty { NoHelp, SmallHelp, BigHelp };
+
 [ExecuteInEditMode]
 [RequireComponent(typeof(LineRenderer))]
 public class Tooltip : MonoBehaviour
@@ -43,9 +43,17 @@ public class Tooltip : MonoBehaviour
 
     public void ToggleState(bool value)
     {
-        if(thisDifficulty == sceneController.GetDifficulty())
+        int actualDifficultys = sceneController.GetDifficultyNumber();
+
+        for (int x = 0; x < actualDifficultys; x++)
         {
-            this.gameObject.SetActive(value);
+            Difficulty diff = sceneController.GetDifficultyByNumber(x);
+            if (thisDifficulty == diff)
+            {
+                this.gameObject.SetActive(value);
+                break;
+            }
         }
+        
     }
 }
