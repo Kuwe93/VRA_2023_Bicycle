@@ -374,6 +374,32 @@ public class SceneController : MonoBehaviour
 
     private void CheckSockel()
     {
+        if (RahmenCheck.hasSelection)
+        {
+            missionToggles[0].ForceSetToggled(true, false);
+        }
+        else
+        {
+            missionToggles[0].ForceSetToggled(false, false);
+        }
+
+        if (PedaleCheck.hasSelection)
+        {
+            missionToggles[6].ForceSetToggled(true, false);
+        }
+        else
+        {
+            missionToggles[6].ForceSetToggled(false, false);
+        }
+
+        if (SattelCheck.hasSelection)
+        {
+            missionToggles[4].ForceSetToggled(true, false);
+        }
+        else
+        {
+            missionToggles[4].ForceSetToggled(false, false);
+        }
         bool allChecked = false;
         bool check1 = true;
         bool check2 = true;
@@ -385,12 +411,28 @@ public class SceneController : MonoBehaviour
                 check1 = false;
             }
         }
+        if (check1)
+        {
+            missionToggles[1].ForceSetToggled(true, false);
+        }
+        else
+        {
+            missionToggles[1].ForceSetToggled(false, false);
+        }
         foreach (var obj in BremsensockelChecks)
         {
             if (!obj.hasSelection)
             {
                 check2 = false;
             }
+        }
+        if (check2)
+        {
+            missionToggles[2].ForceSetToggled(true, false);
+        }
+        else
+        {
+            missionToggles[2].ForceSetToggled(false, false);
         }
         foreach (var obj in LeitungensockelChecks)
         {
@@ -399,6 +441,14 @@ public class SceneController : MonoBehaviour
                 check3 = false;
             }
         }
+        if (check3)
+        {
+            missionToggles[3].ForceSetToggled(true, false);
+        }
+        else
+        {
+            missionToggles[3].ForceSetToggled(false, false);
+        }
         foreach (var obj in RestsockelChecks)
         {
             if (!obj.hasSelection)
@@ -406,8 +456,15 @@ public class SceneController : MonoBehaviour
                 check4 = false;
             }
         }
+        if (check4)
+        {
+            missionToggles[5].ForceSetToggled(true, false);
+        } else
+        {
+            missionToggles[5].ForceSetToggled(false, false);
+        }
 
-        if(check1 && check2 && check3 && check4 && RahmenCheck.hasSelection && PedaleCheck.hasSelection && SattelCheck.hasSelection)
+        if (check1 && check2 && check3 && check4 && RahmenCheck.hasSelection && PedaleCheck.hasSelection && SattelCheck.hasSelection)
         {
             allChecked = true;
         }
