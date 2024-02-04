@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 using MixedReality.Toolkit.UX;
 using TMPro;
 using System;
@@ -10,10 +11,10 @@ public enum Difficulty { NoHelp = 0, SmallHelp = 1, BigHelp = 2 };
 public struct SavedBicyclePosition
 {
     public int bicyclePartArrayPos;
-    public Transform trainingPosition;
+    public Vector3 trainingPosition;
 
     //Constructor
-    public SavedBicyclePosition(int pos, Transform tPosition)
+    public SavedBicyclePosition(int pos, Vector3 tPosition)
     {
         this.bicyclePartArrayPos = pos;
         this.trainingPosition = tPosition;
@@ -28,10 +29,23 @@ public class SceneController : MonoBehaviour
     public PressableButton[] missionToggles;
 
     public List<GameObject> bicycleParts;
+    public List<GameObject> bicyclePartsBig;
 
     public Transform[] bicycleTransforms;
-    private Transform[] startPositions;
+    public Transform[] bicycleTransformsBig;
+    private List<Vector3> startPositions;
+    private List<Vector3> startPositionsBig;
     private List<SavedBicyclePosition> savedPositions;
+    private List<SavedBicyclePosition> savedPositionsBig;
+
+    public List<XRSocketInteractor> ReifensockelChecks;
+    public List<XRSocketInteractor> BremsensockelChecks; //6Sockel 
+    public List<XRSocketInteractor> LeitungensockelChecks;
+    public List<XRSocketInteractor> RestsockelChecks;
+
+    public XRSocketInteractor RahmenCheck;
+    public XRSocketInteractor PedaleCheck;
+    public XRSocketInteractor SattelCheck;
 
     private bool timerActive;
     private float currentTimeInTimer;
@@ -41,7 +55,17 @@ public class SceneController : MonoBehaviour
     void Start()
     {
         savedPositions = new List<SavedBicyclePosition>();
-        startPositions = bicycleTransforms;
+        savedPositionsBig = new List<SavedBicyclePosition>();
+        startPositions = new List<Vector3>();
+        foreach(var obj in bicycleTransforms)
+        {
+            startPositions.Add(new Vector3(obj.position.x, obj.position.y, obj.position.z));
+        }
+        startPositionsBig = new List<Vector3>();
+        foreach (var obj in bicycleTransformsBig)
+        {
+            startPositionsBig.Add(new Vector3(obj.position.x, obj.position.y, obj.position.z));
+        }
         currentTimeInTimer = 0;
         sceneDifficulty = new List<Difficulty>();
         this.AddDifficulty(0);
@@ -50,6 +74,7 @@ public class SceneController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckSockel();
         //update Time of Stopwatch
         if (timerActive)
         {
@@ -65,8 +90,54 @@ public class SceneController : MonoBehaviour
             noHelpToggle.ForceSetToggled(true, false);
         }
 
+        //object check and back transport if it falls outside the room
+        /*foreach(var obj in bicycleParts) {
+            if(obj.transform.position.y <= -1)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(0, 2, 0);
+            }
+            if (obj.transform.position.z <= -5.2)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(0, 0, 2);
+            }
+            if (obj.transform.position.z >= 0.65)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(0, 0, -2);
+            }
+            if (obj.transform.position.x <= -7.25)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(2, 0, 0);
+            }
+            if (obj.transform.position.x >= 7.25)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(-2, 0, 0);
+            }
+        }*/
+        /*foreach(var obj in bicyclePartsBig) {
+            if (obj.transform.position.y <= -1)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(0, 2, 0);
+            }
+            if (obj.transform.position.z <= -5.2)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(0, 0, 2);
+            }
+            if (obj.transform.position.z >= 0.65)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(0, 0, -2);
+            }
+            if (obj.transform.position.x <= -7.25)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(2, 0, 0);
+            }
+            if (obj.transform.position.x >= 7.25)
+            {
+                obj.transform.position = obj.transform.position + new Vector3(-2, 0, 0);
+            }
+        }*/
+
         //test if saved transforms change after moving the actual objectw
-        Debug.Log("Transform 0 is:" + savedPositions[0].trainingPosition.position.x + "," + savedPositions[0].trainingPosition.position.y + "," + savedPositions[0].trainingPosition.position.z);
+        //Debug.Log("Transform 0 is:" + startPositions[0].x + "," + startPositions[0].y + "," + startPositions[0].z);
 
         /*foreach (var diff in sceneDifficulty)
         {
@@ -161,6 +232,7 @@ public class SceneController : MonoBehaviour
         StartTimer();
         //clear savedPositions
         savedPositions.Clear();
+        savedPositionsBig.Clear();
         //ordne die Fahrradteile Zufällig neu an 
         RandomizeObjectPositions();
         //setze die Aufgaben Toggles zurück
@@ -200,29 +272,64 @@ public class SceneController : MonoBehaviour
 
     private void ResetObjectPositions()
     {
-        foreach (var bicyclepart in savedPositions)
+        for (int x = 0; x < bicycleParts.Count; x++)
         {
-            bicycleParts[bicyclepart.bicyclePartArrayPos].transform.position = bicyclepart.trainingPosition.position;
-            bicycleParts[bicyclepart.bicyclePartArrayPos].transform.rotation = bicyclepart.trainingPosition.rotation;
-            bicycleParts[bicyclepart.bicyclePartArrayPos].transform.localScale = bicyclepart.trainingPosition.localScale;
+            foreach (var pos in savedPositions)
+            {
+                if (pos.bicyclePartArrayPos == x)
+                {
+                    bicycleParts[pos.bicyclePartArrayPos].transform.position = pos.trainingPosition;
+                }
+            }
+        }
+
+        for (int x = 0; x < bicyclePartsBig.Count; x++)
+        {
+            foreach (var pos in savedPositionsBig)
+            {
+                if (pos.bicyclePartArrayPos == x)
+                {
+                    bicyclePartsBig[pos.bicyclePartArrayPos].transform.position = pos.trainingPosition;
+                    //bicyclePartsBig[bicyclepart.bicyclePartArrayPos].transform.rotation = bicyclepart.trainingPosition.rotation;
+                    //bicyclePartsBig[bicyclepart.bicyclePartArrayPos].transform.localScale = bicyclepart.trainingPosition.localScale;
+                }
+            }
         }
     }
 
     public void RandomizeObjectPositions()
     {
-        List<Transform> tempTrans = new List<Transform>();
+        List<Vector3> tempTrans = new List<Vector3>();
         foreach(var pos in startPositions)
         {
-            tempTrans.Add(pos);
+            Vector3 tempV3 = new Vector3(pos.x, pos.y + 0.25f, pos.z);
+            tempTrans.Add(tempV3);
         }
         // for each bicyclepart get a random position from the startposition array
         for(int x = 0;x < bicycleParts.Count; x++)
         {
             int tempnr = UnityEngine.Random.Range(0, tempTrans.Count);
             SavedBicyclePosition trainingsItem = new SavedBicyclePosition(x, tempTrans[tempnr]);
-            tempTrans.Remove(tempTrans[tempnr]);
             savedPositions.Add(trainingsItem);
+            tempTrans.Remove(tempTrans[tempnr]);
         }
+
+        List<Vector3> tempTransBig = new List<Vector3>();
+        foreach (var pos in startPositionsBig)
+        {
+            Vector3 tempV3 = new Vector3(pos.x, pos.y + 0.25f, pos.z);
+            tempTransBig.Add(tempV3);
+        }
+        // for each bicyclepart get a random position from the startposition array
+        for (int x = 0; x < bicyclePartsBig.Count; x++)
+        {
+            int tempnr = UnityEngine.Random.Range(0, tempTransBig.Count);
+            //Debug.Log("x = "+x+" und TempNR = "+tempnr);
+            SavedBicyclePosition trainingsItem = new SavedBicyclePosition(x, tempTransBig[tempnr]);
+            savedPositionsBig.Add(trainingsItem);
+            tempTransBig.Remove(tempTransBig[tempnr]);
+        }
+
 
         PositionObjects();
     }
@@ -235,12 +342,25 @@ public class SceneController : MonoBehaviour
             {
                 if(pos.bicyclePartArrayPos == x)
                 {
-                    bicycleParts[x].transform.position = pos.trainingPosition.position;
-                    bicycleParts[x].transform.rotation = pos.trainingPosition.rotation;
-                    bicycleParts[x].transform.localScale = pos.trainingPosition.localScale;
+                    bicycleParts[x].transform.position = pos.trainingPosition;
+                    //bicycleParts[x].transform.rotation = pos.trainingPosition.rotation;
+                    //bicycleParts[x].transform.localScale = pos.trainingPosition.localScale;
                 }
             }
             
+        }
+        for (int x = 0; x < bicyclePartsBig.Count; x++)
+        {
+            foreach (var pos in savedPositionsBig)
+            {
+                if (pos.bicyclePartArrayPos == x)
+                {
+                    bicyclePartsBig[x].transform.position = pos.trainingPosition;
+                    //bicyclePartsBig[x].transform.rotation = pos.trainingPosition.rotation;
+                    //bicyclePartsBig[x].transform.localScale = pos.trainingPosition.localScale;
+                }
+            }
+
         }
     }
 
@@ -249,6 +369,52 @@ public class SceneController : MonoBehaviour
         foreach(var toggle in missionToggles)
         {
             toggle.ForceSetToggled(false, false);
+        }
+    }
+
+    private void CheckSockel()
+    {
+        bool allChecked = false;
+        bool check1 = true;
+        bool check2 = true;
+        bool check3 = true;
+        bool check4 = true;
+        foreach (var obj in ReifensockelChecks)
+        {
+            if (!obj.hasSelection) {
+                check1 = false;
+            }
+        }
+        foreach (var obj in BremsensockelChecks)
+        {
+            if (!obj.hasSelection)
+            {
+                check2 = false;
+            }
+        }
+        foreach (var obj in LeitungensockelChecks)
+        {
+            if (!obj.hasSelection)
+            {
+                check3 = false;
+            }
+        }
+        foreach (var obj in RestsockelChecks)
+        {
+            if (!obj.hasSelection)
+            {
+                check4 = false;
+            }
+        }
+
+        if(check1 && check2 && check3 && check4 && RahmenCheck.hasSelection && PedaleCheck.hasSelection && SattelCheck.hasSelection)
+        {
+            allChecked = true;
+        }
+
+        if (allChecked)
+        {
+            StopTimer();
         }
     }
 }
