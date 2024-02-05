@@ -26,6 +26,8 @@ public class SceneController : MonoBehaviour
     private List<Difficulty> sceneDifficulty;
     public PressableButton noHelpToggle;
 
+    public HelpScreen helpscreencontroller;
+
     public PressableButton[] missionToggles;
 
     public List<GameObject> bicycleParts;
@@ -90,6 +92,14 @@ public class SceneController : MonoBehaviour
             noHelpToggle.ForceSetToggled(true, false);
         }
 
+        if (sceneDifficulty.Contains(Difficulty.BigHelp))
+        {
+            helpscreencontroller.ToggleState(true);
+        } else
+        {
+            helpscreencontroller.ToggleState(false);
+        }
+
         //object check and back transport if it falls outside the room
         /*foreach(var obj in bicycleParts) {
             if(obj.transform.position.y <= -1)
@@ -141,7 +151,9 @@ public class SceneController : MonoBehaviour
 
         /*foreach (var diff in sceneDifficulty)
         {
-            Debug.Log("Actual Difficulty: " + diff);
+            int c = 0;
+            Debug.Log(c+": Actual Difficulty: " + diff);
+            c++;
         }*/
     }
 
@@ -217,6 +229,7 @@ public class SceneController : MonoBehaviour
             case 2:
                 if (SearchDifficulty(Difficulty.BigHelp))
                 {
+                    //Debug.Log("Entferne Difficulty BigHelp.");
                     sceneDifficulty.Remove(Difficulty.BigHelp);
                 }
                 break;
